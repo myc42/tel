@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<meta name="description" content="Tu as trouvé le téléphone de Maabio… Fouille-le.">
+<title>Le téléphone de Maabio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,100..900&display=swap">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<style type="text/tailwindcss">
+  @layer components {
+    .row { @apply flex w-full items-center gap-3 px-4 py-2.5 text-left; }
+    .grp { @apply mx-4 mb-6 overflow-hidden rounded-xl bg-[#1c1c1e]; }
+    .big { @apply px-4 pb-2 pt-1 text-[34px] font-bold leading-tight; }
+    .sub { @apply text-[13px] text-white/50; }
+    .ic { @apply relative flex h-[60px] w-[60px] shrink-0 items-center justify-center overflow-hidden; border-radius: 22.37%; }
+    .av { @apply flex shrink-0 items-center justify-center rounded-full bg-gradient-to-b from-[#a5a5ad] to-[#6f6f77] font-medium text-white; }
+    .glass { background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(30px) saturate(150%); -webkit-backdrop-filter: blur(30px) saturate(150%); border: 1px solid rgba(255, 255, 255, 0.1); }
+  }
+</style>
+<style>
+  :root { color-scheme: dark; }
+  html, body { height: 100%; margin: 0; background: #000; overflow: hidden; overscroll-behavior: none; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Inter", "Helvetica Neue", system-ui, sans-serif; -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: transparent; user-select: none; }
+  button { font: inherit; color: inherit; }
+  button:focus-visible { outline: 2px solid #0a84ff; outline-offset: 2px; }
+  .wapp{background-color:#0b0b0b;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120' fill='none' stroke='%23fff' stroke-opacity='.07' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='22' cy='24' r='9'/%3E%3Cpath d='M70 20l4 8 9 1-6 6 2 9-9-5-9 5 2-9-6-6 9-1z'/%3E%3Crect x='88' y='64' width='20' height='16' rx='4'/%3E%3Cpath d='M30 74c-10-6-10-16-2-16 3 0 5 2 6 4 1-2 3-4 6-4 8 0 8 10-2 16l-4 4z'/%3E%3Cpath d='M64 96v14M57 103h14M100 14v10M95 19h10'/%3E%3C/svg%3E")}
+  /* Fond d'"écran : DATA.wallpaper = "screen/1.webp" */
+  #wall { background: radial-gradient(120% 70% at 50% 0%, #6b4a7c, #2b1b3b 50%, #0b0710); background-size: cover; background-position: center; }
+  #app { transform: scale(.1); opacity: 0; pointer-events: none; border-radius: 50px; transition: transform .42s cubic-bezier(.32,.72,0,1), opacity .25s, border-radius .42s; }
+  #app.open { transform: none; opacity: 1; pointer-events: auto; border-radius: 0; }
+  #lock { transition: transform .5s cubic-bezier(.32,.72,0,1); }
+  #lock.drag { transition: none; }
+  @keyframes up{0%{transform:translateY(10px);opacity:0}40%{opacity:1}100%{transform:translateY(-10px);opacity:0}}
+  @keyframes sh{from{background-position:200% 0}to{background-position:-200% 0}}
+  @keyframes pop{from{transform:scale(.6) translateY(18px);opacity:0}}
+  @keyframes ring{from{transform:scale(1);opacity:.45}to{transform:scale(2.3);opacity:0}}
+  @keyframes eq{50%{transform:scaleY(.25)}}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .chev{animation:up 1.8s ease-in-out infinite}
+  .shim{background:linear-gradient(90deg,rgba(255,255,255,.4) 35%,#fff 50%,rgba(255,255,255,.4) 65%);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:sh 2.6s linear infinite}
+  #phone[data-s=lock] #home{opacity:0}
+  .enter #grid>*,.enter #dock>*{animation:pop .55s cubic-bezier(.2,.9,.3,1.15) calc(150ms + var(--i)*40ms) both}
+  #phone[data-call] #bar{pointer-events:none}
+  .ov{transition:opacity .4s,transform .45s cubic-bezier(.32,.72,0,1)}
+  .ov.off{opacity:0;pointer-events:none;transform:scale(1.04)}
+  #banner{transform:translateY(calc(-100% - 70px));visibility:hidden;pointer-events:none;transition:transform .55s cubic-bezier(.32,.72,0,1),visibility 0s .55s}
+  #banner.show{transform:none;visibility:visible;pointer-events:auto;transition:transform .55s cubic-bezier(.32,.72,0,1),visibility 0s}
+  @keyframes al{from{transform:scale(1.15);opacity:0}}
+  #batt:not(.off)>div{animation:al .3s ease-out}
+  body { font-optical-sizing: auto; font-synthesis: none; font-kerning: normal; text-rendering: optimizeLegibility; -moz-osx-font-smoothing: grayscale; }
+  #clock, #cT, #num { font-variant-numeric: tabular-nums; }
+  #grid > button:not(.col-span-2) { font-weight: 500; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="flex min-h-full items-center justify-center">
+<div class="relative w-full max-w-[410px]">
+  <div id="phone" data-s="lock" class="relative w-full overflow-hidden bg-black text-white sm:rounded-[58px] sm:border-[10px] sm:border-[#1c1c1e] sm:ring-1 sm:ring-white/25 sm:shadow-[inset_0_0_10px_rgba(0,0,0,0.8)]" style="height:100dvh;max-height:864px">
+    
+    <!-- Boutons physiques -->
+    <div class="hidden sm:block absolute -left-[14px] top-[140px] h-[28px] w-[4px] rounded-l bg-[#2c2c2e]"></div>
+    <div class="hidden sm:block absolute -left-[14px] top-[190px] h-[55px] w-[4px] rounded-l bg-[#2c2c2e]"></div>
+    <div class="hidden sm:block absolute -left-[14px] top-[260px] h-[55px] w-[4px] rounded-l bg-[#2c2c2e]"></div>
+    <div class="hidden sm:block absolute -right-[14px] top-[210px] h-[85px] w-[4px] rounded-r bg-[#2c2c2e]"></div>
+    
+    <div id="wall" class="absolute inset-0"></div>
+
+    <!-- Dynamic Island + barre d'état -->
+    <div class="absolute left-1/2 top-[11px] z-[70] flex h-[37px] w-[124px] -translate-x-1/2 items-center justify-end rounded-full bg-black pr-3 shadow-[inset_0_0_2px_rgba(255,255,255,0.05)]">
+      <div class="h-3 w-3 rounded-full bg-white/10 blur-[0.5px]"></div>
+    </div>
+    <div class="pointer-events-none absolute inset-x-0 top-0 z-[65] flex h-[54px] items-center justify-between px-7 pt-1.5">
+      <span id="clock" class="w-[74px] text-center text-[17px] font-semibold"></span>
+      <span class="flex w-[74px] items-center justify-center gap-1.5">
+        <svg width="18" height="12" viewBox="0 0 18 12" fill="#fff"><rect y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" width="3" height="12" rx="1"/></svg>
+        <svg width="17" height="12" viewBox="0 0 17 12" fill="#fff"><path d="M8.5 2.3c2.3 0 4.4.9 6 2.4l1-1.1A10.4 10.4 0 0 0 8.5.8 10.4 10.4 0 0 0 1.5 3.6l1 1.1a8.8 8.8 0 0 1 6-2.4zm0 3.6c1.3 0 2.5.5 3.4 1.3l1-1.1a7.2 7.2 0 0 0-8.8 0l1 1.1a5 5 0 0 1 3.4-1.3zm0 3.5c.6 0 1.1.2 1.5.6L8.5 12 7 10c.4-.4.9-.6 1.5-.6z"/></svg>
+        <span id="bat" class="flex"></span>
+      </span>
+    </div>
+
+    <!-- Écran d'accueil -->
+    <div id="home" class="absolute inset-0 z-10 transition-opacity duration-500">
+    <main class="absolute inset-0 z-10 px-[27px] pt-[108px]">
+      <div id="grid" class="grid auto-rows-[82px] grid-cols-4 gap-x-[22px] gap-y-4"></div>
+    </main>
+    <div class="glass absolute bottom-[122px] left-1/2 z-10 -translate-x-1/2 rounded-full px-5 py-1 text-[13px] text-white/90">Recherche</div>
+    <div id="dock" class="glass absolute inset-x-2.5 bottom-[22px] z-10 flex justify-around rounded-[36px] py-3"></div>
+    </div>
+
+    <!-- Application ouverte -->
+    <section id="app" class="absolute inset-0 z-20 flex flex-col bg-black">
+      <header id="hdr" class="glass z-10 shrink-0 bg-black/70 px-3 pb-1.5 pt-[54px] !border-none !rounded-none">
+        <div class="relative flex h-11 items-center">
+          <button id="back" class="z-10 flex items-center gap-1 text-[17px]" style="color:var(--ac)"></button>
+          <h2 id="hTitle" class="pointer-events-none absolute inset-x-0 text-center text-[17px] font-semibold"></h2>
+        </div>
+      </header>
+      <button id="fback" style="display:none" class="glass absolute left-3 top-[58px] z-30 items-center justify-center rounded-full bg-black/40 pr-0.5 h-9 w-9" aria-label="Retour"><svg width="10" height="17" viewBox="0 0 12 20"><path d="M10 2 2 10l8 8" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <div id="body" class="relative flex-1 overflow-y-auto overscroll-contain"></div>
+    </section>
+
+    <!-- Écran verrouillé -->
+    <section id="lock" class="absolute inset-0 z-50 flex cursor-pointer flex-col items-center text-center" style="touch-action:none" tabindex="0" aria-label="Écran verrouillé : balaie vers le haut pour ouvrir">
+      <svg class="mt-[60px]" width="16" height="22" viewBox="0 0 16 22"><rect y="9" width="16" height="13" rx="3" fill="#fff"/><path d="M3.5 9V6.5a4.5 4.5 0 0 1 9 0V9" fill="none" stroke="#fff" stroke-width="2.4"/></svg>
+      <p id="lDate" class="mt-4 text-[19px] font-semibold capitalize text-white/85"></p>
+      <p id="lTime" class="text-[105px] font-semibold leading-[1.1] tracking-tighter"></p>
+      <p id="lMsg" class="-mt-1 px-8 text-[17px] font-medium text-white/90 drop-shadow"></p>
+      <div id="notif" class="glass mx-3 mb-[150px] mt-auto flex w-[calc(100%-24px)] items-start gap-3 rounded-[22px] bg-[#3a3a3e]/60 p-3 text-left"></div>
+      <div class="absolute inset-x-0 bottom-[58px] flex justify-between px-11">
+        <button id="torch" class="glass flex h-[50px] w-[50px] items-center justify-center rounded-full bg-black/40 text-white" aria-label="Lampe torche"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 2h8v4l-2 3v2h-4V9L8 6zM10 13h4v8a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1z"/></svg></button>
+        <button class="glass flex h-[50px] w-[50px] items-center justify-center rounded-full bg-black/40" aria-label="Appareil photo"><svg width="24" height="24" viewBox="0 0 24 24" fill="#fff"><path d="M9 4h6l1.5 2H20a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h3.5z"/><circle cx="12" cy="13" r="3.8" fill="#3a3a3e"/></svg></button>
+      </div>
+      <div class="pointer-events-none absolute inset-x-0 bottom-[60px] flex flex-col items-center gap-1"><svg class="chev" width="24" height="12" viewBox="0 0 24 12" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10l9-8 9 8"/></svg><p class="shim text-[16px] font-medium">Balayer vers le haut</p></div>
+    </section>
+
+    <div id="batt" class="ov off absolute inset-0 z-[80] flex items-center justify-center bg-black/45" role="alertdialog" aria-labelledby="bT">
+      <div class="glass w-[270px] overflow-hidden rounded-2xl bg-[#2c2c2e]/90 text-center"><p class="px-4 py-5"><b id="bT" class="block text-[17px] font-semibold">Batterie faible</b><span id="bS" class="text-[13px] text-white/70"></span></p>
+        <div class="divide-y divide-white/15 border-t border-white/15 text-[17px] text-[#0a84ff]"><button data-b="lp" class="block w-full py-3">Mode économie d’énergie</button><button data-b="ok" class="block w-full py-3 font-semibold">Fermer</button></div></div>
+    </div>
+    <section id="call" class="ov off absolute inset-0 z-[64] overflow-hidden bg-black text-center text-white" aria-live="polite">
+      <div id="cBg" class="absolute inset-0 scale-125 bg-[#2b1b3b] bg-cover bg-center" style="filter:blur(40px) brightness(.5)"></div>
+      <div id="cBody" class="absolute inset-0 flex flex-col items-center px-6 pt-[78px]"></div>
+    </section>
+    <button id="banner" class="glass absolute inset-x-3 top-[54px] z-[72] flex items-start gap-3 rounded-[22px] bg-[#3a3a3e]/70 p-3 text-left" aria-label="Nouveau message"></button>
+    <button id="bar" class="absolute inset-x-0 bottom-0 z-[66] flex h-[34px] items-end justify-center pb-1.5" aria-label="Accueil"><span class="h-[4px] w-[140px] rounded-full bg-white/90"></span></button>
+  </div>
+</div>
+</div>
+
+<script>
+/* ===================== CONTENU ===================== */
+/* Photos de profil (recadrées de tes captures) : remplace par 'avatars/xxx.jpg' si tu veux */
+const PICS = {owner:"data:image/jpeg;base64,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"};
+const DATA = {
+  owner: "Maabio", ownerPic: PICS.owner,
+  battery: 9,
+  weather: { city: "Abidjan", temp: 29, cond: "Partiellement nuageux", hi: 31, lo: 25,
+    hours: [["⛅", 29], ["⛅", 30], ["☀️", 31], ["⛅", 30], ["🌧️", 27], ["🌙", 26]],
+    days: [["⛅", 25, 31], ["🌧️", 24, 29], ["🌧️", 24, 28], ["⛅", 25, 30], ["☀️", 25, 32]] },
+  wallpaper: "screen/1.webp",
+  lockText: "Tu as retrouvé le téléphone de Maabio",
+  notif: { app: "messages", title: "Kayla", text: "maman chargeur est ou oh ?", time: "maintenant" },
+  
+  /* Galerie : remplie automatiquement depuis le dossier gallery/ (voir « GALERIE » en bas du premier script) */
+  gallery: [],
+
+  chats: [
+    { name: "coach hamond chic", pic: "profil/coach.jpg", unread: 1, time: "20:45", msgs: [{ t: "j'aime trop" }] },
+    { name: "vanene", pic: "profil/vane.jpg", time: "18:06", msgs: [{ t: "skyjo ?" }] }
+  ],
+  notes: [
+    { title: "Liste de courses", date: "Hier", text: "Pâtes\nCroquettes\nPiles AA\n(Remplace ce texte par tes notes.)" },
+    { title: "Idées de textes", date: "Lundi", text: "Une ligne, un souvenir, une rature.\n(Remplace ce texte par tes notes.)" }
+  ],
+  contacts: ["alric", "daiki", "durd", "einatshi", "icy", "iksma", "kev 117", "moggy", "nachos", "nbrs"].map(name => ({ name })),
+  calls: [{ name: "Kayla", type: "FaceTime vidéo", time: "Hier", miss: 1 }, { name: "CHAKA BINATE", type: "FaceTime audio", time: "Lundi" }],
+  events: [{ day: 12, t: "Studio", h: "14:00" }, { day: 20, t: "Dîner chez CHAKA BINATE", h: "20:30" }],
+  tracks: [
+    { title: "Titre 1", artist: "Maabio", a: "#fb7185", b: "#7c3aed", src: "" },
+    { title: "Titre 2", artist: "Maabio", a: "#38bdf8", b: "#1e3a8a", src: "" },
+    { title: "Titre 3", artist: "Maabio", a: "#facc15", b: "#ea580c", src: "" }
+  ],
+  videos: [
+    { yt: "gI9UbjpCsPw", title: "Vidéo 1", chan: "YouTube", meta: "Recommandé pour toi", a: "#fb7185", b: "#7c3aed" },
+    { yt: "4Qb2nPumLDI", title: "Vidéo 2", chan: "YouTube", meta: "Recommandé pour toi", a: "#38bdf8", b: "#1e3a8a" },
+    { yt: "nWqa--sCZ1Y", title: "Vidéo 3", chan: "YouTube", meta: "Recommandé pour toi", a: "#facc15", b: "#ea580c" }
+  ],
+  safariUrl: "https://the42.fr", /* clic sur Safari → redirige ici */
+  caller: { name: "marie-kerene", pic: "gallery/25.jpg", number: "+33 6 39 98 20 11", maybe: "Maabio" }, /* appel entrant : numéro seul + « Peut-être : … » */
+  lowBattery: 6,
+  callAudio: ["voice/appel.mp3", "voice appel.mp3"], /* essaie le 1er chemin, puis le 2e si introuvable */
+  msg: { done: "Tu as bien écouté mon vocal ? Réponds-moi vite 💜", missed: "Tu n’as pas décroché… Rappelle-moi dès que tu peux 🙏" },
+  recents: [],
+  wa: [
+    { name: "Kayla", time: "09:41", unread: 2, msgs: [{ t: "Tu es où ??", h: "09:12" }, { me: 1, t: "Au studio, j’arrive", h: "09:14" }, { vo: "0:12", t: "🎤 0:12", h: "09:30" }, { img: { a: "#fda4af", b: "#be123c" }, t: "📷 Photo", h: "09:36", dl: "1,2 Mo" }, { t: "maman chargeur est ou oh ?", h: "09:41" }] },
+    { name: "CHAKA BINATE", time: "Lundi", msgs: [{ me: 1, t: "T’as vu la vidéo ?", h: "21:30" }, { vo: "0:07", t: "🎤 0:07", h: "21:31" }, { img: { a: "#fcd34d", b: "#f97316" }, t: "📷 Photo", h: "21:32" }, { t: "Morte de rire 😂", h: "21:33" }] }
+  ],
+  /* Groupe WhatsApp ajouté dès qu’on décroche (nom et messages à personnaliser) */
+  waGroup: { name: "Les Bios ♻️", pic: "gallery/1.jpg", sub: "kng, desso, maxime, aurel…", time: "maintenant", unread: 1, top: 1, msgs: [
+    { me: 1, one: 1, fwd: 1, file: { n: "Maabio - banalité.wav", s: "1,5 Mo • mp3" }, t: "vous en dites quoi ?" }
+  ] }
+};
+/* ============================ FIN DU CONTENU ============================ */
+
+const emit = (n, d) => document.dispatchEvent(new CustomEvent("ph", { detail: { n, d } })), $ = s => document.querySelector(s), D = DATA, P = '<div class="h-10"></div>';
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const ini = n => esc(n.split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase());
+const bg = p => p.src ? `background:url('${esc(p.src)}') center/cover` : `background:linear-gradient(135deg,${p.a},${p.b})`;
+const gr = p => bg({ a: p.a, b: p.b });
+const HS = '<path fill="#fff" d="M18 12c-3 1-5 4-4 9 3 12 14 23 27 27 5 1 8-1 9-4l1-3c.4-1-.1-2-1-2.5l-8-3.6c-1-.4-2-.2-2.7.6l-2 2.4c-5-2.4-9.5-7-12-12l2.4-2c.8-.7 1-1.7.6-2.7l-3.6-8C21 12.3 20 12 19 12z"/>';
+const CH = '<svg width="12" height="20" viewBox="0 0 12 20"><path d="M10 2 2 10l8 8" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const PLAY = '<svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l13-7.5z"/></svg>', PAUSE = '<svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>';
+const now = new Date(), svg = b => `<svg class="h-full w-full" viewBox="0 0 60 60">${b}</svg>`;
+
+/* Icônes d'apps (Images locales dans le dossier "icons") */
+const _img = url => `<img src="${url}" class="absolute inset-0 w-full h-full object-cover scale-[1.02]" alt="">`;
+const TKP = "M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z";
+const IC = {
+  messages: ["#fff", _img("icons/messages.png")],
+  photos: ["#fff", _img("icons/photos.png")],
+  notes: ["#fff", _img("icons/notes.png")],
+  contacts: ["#fff", _img("icons/contacts.png")],
+  facetime: ["#fff", _img("icons/facetime.png")],
+  calendar: ["#fff", `<div class="text-center leading-none mt-1"><div class="text-[11px] font-bold text-[#ff3b30] uppercase tracking-wider">${now.toLocaleDateString("fr-FR", { weekday: "short" })}</div><div class="text-[34px] font-light text-black -mt-0.5">${now.getDate()}</div></div>`],
+  camera: ["#fff", _img("icons/camera.png")],
+  youtube: ["#fff", _img("icons/youtube.png")],
+  spotify: ["#fff", _img("icons/spotify.png")],
+  safari: ["#fff", _img("icons/safari.png")],
+  phone: ["#fff", _img("icons/phone.png")],
+  whatsapp: ["#fff", _img("icons/whatsapp.png")],
+  weather: ["#fff", _img("icons/weather.png")],
+  /* Si icons/tiktok.png existe elle remplace le logo dessiné ci-dessous */
+  tiktok: ["#000", `<svg viewBox="0 0 60 60" class="absolute inset-0 h-full w-full"><g transform="translate(16.2 15.6) scale(1.2)"><path d="${TKP}" fill="#25f4ee" transform="translate(-.8 -.8)"/><path d="${TKP}" fill="#fe2c55" transform="translate(.8 .8)"/><path d="${TKP}" fill="#fff"/></g></svg><img src="icons/tiktok.png" onerror="this.remove()" class="absolute inset-0 h-full w-full scale-[1.02] object-cover" alt="">`]
+};
+
+const APPS = { messages: ["Messages", "#0a84ff"], photos: ["Galerie", "#0a84ff"], notes: ["Notes", "#ffd60a"], contacts: ["Contacts", "#0a84ff"], facetime: ["FaceTime", "#30d158"], calendar: ["Calendrier", "#ff453a"],  camera: ["Appareil photo", "#ffd60a"], youtube: ["YouTube", "#ff3030"], spotify: ["Spotify", "#1ed760"], safari: ["Safari", "#0a84ff"], phone: ["Téléphone", "#0a84ff"], whatsapp: ["WhatsApp", "#25d366"], weather: ["Météo", "#fff"] };
+const ic = (id, z = 1) => `<span class="ic" style="zoom:${z};background:${IC[id][0]}">${IC[id][1]}</span>`;
+const appBtn = (id, label) => `<button data-open="${id}" class="flex w-[100%] flex-col items-center gap-1 text-[11.5px] font-bold" aria-label="${APPS[id][0]}">${ic(id)}${label ? `<span class="w-full truncate text-center">${APPS[id][0]}</span>` : ""}</button>`;
+
+/* Horloge, fond, accueil, notification */
+const hm = d => `${d.getHours()}:${String(d.getMinutes()).padStart(2, "0")}`;
+const tick = () => { const n = new Date(); $("#clock").textContent = $("#lTime").textContent = hm(n); $("#lDate").textContent = n.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" }); };
+const batt = (p, lp) => `<svg width="27" height="13" viewBox="0 0 27 13"><rect x=".5" y=".5" width="22" height="12" rx="4.5" fill="none" stroke="#fff" opacity=".4"/><rect x="2" y="2" width="${Math.max(2.5, 19 * p / 100)}" height="9" rx="3" fill="${lp ? "#ffd60a" : p <= 20 ? "#ff3b30" : "#fff"}"/><path d="M24 4.5v4c.8-.3 1.5-1.1 1.5-2s-.7-1.7-1.5-2z" fill="#fff" opacity=".45"/><text x="11.5" y="9.6" font-size="9" font-weight="700" text-anchor="middle" fill="#fff">${p}</text></svg>`;
+tick(); setInterval(tick, 1000); $("#bat").innerHTML = batt(D.battery);
+if (D.wallpaper) { const im = new Image(); im.onload = () => $("#wall").style.backgroundImage = `url('${D.wallpaper}')`; im.src = D.wallpaper; }
+const ev = D.events.find(e => e.day >= now.getDate());
+
+$("#grid").innerHTML = `<button data-open="calendar" class="col-span-2 row-span-2 h-[158px] self-start rounded-[22px] bg-[#1c1c1e] p-3.5 text-left" aria-label="Calendrier">
+  <span class="block text-[13px] font-semibold uppercase text-[#ff453a]">${now.toLocaleDateString("fr-FR", { weekday: "long" })}</span>
+  <span class="block text-[44px] font-light leading-none">${now.getDate()}</span>
+  <span class="mt-3 block border-l-[3px] border-[#ff453a] pl-2 text-[13px] ${ev ? "" : "text-white/50"}">${ev ? `<b class="block font-semibold">${esc(ev.t)}</b>${ev.h}` : "Aucun évènement"}</span></button>`
+  + ["photos", "camera", "youtube", "notes", "contacts", "safari", "facetime", "spotify", "weather"].map(id => appBtn(id, 1)).join("")
+  /* TikTok : icône grisée + rond de progression, comme une app en cours d'installation depuis l'App Store */
+  + `<button id="tk" class="flex w-[100%] flex-col items-center gap-1 text-[11.5px] font-bold" aria-label="TikTok, téléchargement en cours"><span class="ic" style="background:${IC.tiktok[0]}">${IC.tiktok[1]}<span class="absolute inset-0" style="background:rgba(142,142,147,.55)"></span><span class="absolute inset-0 flex items-center justify-center"><svg width="36" height="36" viewBox="0 0 36 36"><circle cx="18" cy="18" r="16" fill="rgba(0,0,0,.22)" stroke="#fff" stroke-width="1.8"/><g id="tkSp" style="transform-box:fill-box;transform-origin:center;animation:spin 1s linear infinite"><circle cx="18" cy="18" r="11" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="14 56"/></g><circle id="tkPie" cx="18" cy="18" r="5.5" fill="none" stroke="#fff" stroke-width="11" stroke-dasharray="0 34.56" transform="rotate(-90 18 18)" opacity="0" style="transition:stroke-dasharray .35s linear"/><g id="tkPz" opacity="0"><rect x="13.5" y="12" width="3" height="12" rx="1" fill="#fff"/><rect x="19.5" y="12" width="3" height="12" rx="1" fill="#fff"/></g></svg></span></span><span class="w-full truncate text-center">TikTok</span></button>`;
+$("#dock").innerHTML = ["whatsapp", "phone", "messages"].map(id => appBtn(id, 0)).join("");
+$("#lMsg").textContent = D.lockText;
+const N = D.notif;
+$("#notif").innerHTML = `${ic(N.app, .63)}<span class="min-w-0 flex-1"><span class="flex justify-between"><b class="text-[15px] font-semibold">${esc(N.title)}</b><span class="text-[13px] text-white/60">${esc(N.time)}</span></span><span class="block text-[15px] leading-snug">${esc(N.text)}</span></span>`;
+
+/* Vues : chacune renvoie { t: titre, large, full, h: html } */
+const CR = '<svg width="8" height="14" viewBox="0 0 8 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l6 6-6 6"/></svg>';
+const pav = (o, z, fs, t) => o.pic ? `<img src="${o.pic}" alt="" class="shrink-0 rounded-full object-cover" style="width:${z}px;height:${z}px">` : `<span class="av" style="width:${z}px;height:${z}px;font-size:${fs}px${o.grad ? ";background:" + o.grad : ""}">${t ?? o.ini ?? ini(o.name)}</span>`;
+const bubble = m => `<div class="flex ${m.me ? "justify-end" : ""}"><p class="max-w-[75%] rounded-[18px] px-3.5 py-2 text-[17px] leading-snug ${m.me ? "bg-[#0a84ff]" : "bg-[#262629]"}">${esc(m.t)}</p></div>`;
+const mon = now.toLocaleDateString("fr-FR", { month: "short" });
+let cur = -1, play = false, au = null, galReady = false;
+const dur = s => { const t = Math.round(s); return isFinite(t) ? `${t / 60 | 0}:${String(t % 60).padStart(2, "0")}` : "▶"; };
+const stamp = i => new Date(Date.now() - i * 86400000).toLocaleDateString("fr-FR", { day: "numeric", month: "long" }) + " à " + (10 + (i % 12)) + ":" + String(i % 60).padStart(2, "0");
+const thumb = p => p.vid
+  ? `<video src="${esc(p.src)}#t=0.1" preload="metadata" muted playsinline class="absolute inset-0 h-full w-full object-cover" onloadedmetadata="this.nextElementSibling.textContent=dur(this.duration)"></video><b class="absolute bottom-1 right-1.5 text-[12px] font-semibold text-white [text-shadow:0_1px_3px_rgba(0,0,0,.8)]">▶</b>`
+  : `<img src="${esc(p.src)}" loading="lazy" decoding="async" alt="" class="absolute inset-0 h-full w-full object-cover">`;
+const V = {
+  messages: () => ({ t: "Messages", nohdr: 1, h: `<div class="px-4 pb-1 pt-[58px]"><div class="flex justify-between"><button data-back class="flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-[#1c1c1e]" aria-label="Retour">${CH}</button><span class="flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-[#1c1c1e]">${SI('<path d="M4 6h16M7 12h10M10 18h4"/>')}</span></div><h1 class="mt-6 text-[38px] font-extrabold leading-none tracking-tight">Messages</h1></div><ul class="mt-5">${D.chats.map((c, i) => `<li class="relative mx-4 border-b border-white/10">${c.unread ? '<i class="absolute -left-3.5 top-1/2 h-2.5 w-2.5 -translate-y-1/2 rounded-full bg-[#3b82f6]"></i>' : ""}<button data-go="chat:${i}" class="flex w-full items-center gap-3 py-3.5 text-left">${pav(c, 58, 22)}<span class="min-w-0 flex-1"><span class="flex justify-between gap-2"><b class="text-[19px] font-bold">${esc(c.name)}</b><span class="shrink-0 text-[15px] text-white/50">${esc(c.time)}</span></span><span class="block truncate text-[16px] text-white/55">${esc(c.msgs.at(-1).t)}</span></span><span class="text-white/30">${CR}</span></button></li>`).join("")}</ul>${P}` }),
+  chat: i => { const c = D.chats[i]; c.unread = 0; return { t: c.name, h: `<div class="flex min-h-full flex-col"><div class="flex-1 space-y-1.5 p-3">${c.msgs.map(bubble).join("")}</div><div class="glass sticky bottom-0 bg-black/80 px-3 pb-9 pt-2"><div class="rounded-full border border-white/20 px-4 py-1.5 text-white/40">iMessage</div></div></div>` }; },
+
+  photos: () => { const g = D.gallery, nv = g.filter(p => p.vid).length, np = g.length - nv;
+    return { t: "Photos", large: 1, h: `<h1 class="big">Bibliothèque</h1>${g.length
+      ? `<div class="grid grid-cols-3 gap-0.5">${g.map((p, i) => `<button data-go="photo:${i}" class="relative aspect-square overflow-hidden bg-[#1c1c1e]" aria-label="${p.vid ? "Vidéo" : "Photo"} ${i + 1}">${thumb(p)}</button>`).join("")}</div><p class="py-6 text-center text-[15px]">${np} photo${np > 1 ? "s" : ""}, ${nv} vidéo${nv > 1 ? "s" : ""}</p>`
+      : EMPTY(galReady ? "Aucune photo" : "Chargement…")}${P}` }; },
+
+  /* Visionneuse : slider horizontal (photos + vidéos), date en haut, boutons reculer / avancer */
+  photo: i => ({
+    t: "Photo", full: 1,
+    after: () => {
+      const c = $("#photoCarousel"); if (!c) return;
+      c.scrollLeft = c.clientWidth * i;
+      c.addEventListener("scroll", () => { clearTimeout(c._t); c._t = setTimeout(() => { const k = Math.round(c.scrollLeft / c.clientWidth); c.querySelectorAll("video").forEach(v => { if (+v.dataset.i !== k) v.pause(); }); }, 120); }, { passive: true });
+    },
+    h: `
+      <div class="absolute inset-0 bg-black flex flex-col z-[100]">
+        <style>#photoCarousel::-webkit-scrollbar { display: none; }</style>
+        <button data-back class="glass absolute left-3 top-[58px] z-[110] flex items-center justify-center rounded-full bg-black/40 pr-0.5 h-9 w-9" aria-label="Retour">
+          <svg width="10" height="17" viewBox="0 0 12 20"><path d="M10 2 2 10l8 8" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button onclick="const c = document.getElementById('photoCarousel'); c.scrollBy({left: -c.clientWidth, behavior: 'smooth'});" class="glass absolute left-3 top-1/2 -translate-y-1/2 z-[110] flex items-center justify-center rounded-full bg-black/50 h-10 w-10 text-white shadow-lg" aria-label="Reculer">
+          <svg width="12" height="20" viewBox="0 0 12 20"><path d="M10 2 2 10l8 8" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button onclick="const c = document.getElementById('photoCarousel'); c.scrollBy({left: c.clientWidth, behavior: 'smooth'});" class="glass absolute right-3 top-1/2 -translate-y-1/2 z-[110] flex items-center justify-center rounded-full bg-black/50 h-10 w-10 text-white shadow-lg" aria-label="Avancer">
+          <svg width="12" height="20" viewBox="0 0 12 20"><path d="M2 2l8 8-8 8" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div id="photoCarousel" class="flex h-full w-full overflow-x-auto overscroll-x-contain snap-x snap-mandatory" style="scrollbar-width: none;">
+          ${D.gallery.map((p, k) => `
+            <div class="relative flex h-full w-full shrink-0 snap-center snap-always flex-col items-center justify-center">
+              <div class="absolute top-[62px] inset-x-0 text-center z-[105]"><span class="text-white text-[14px] font-semibold drop-shadow-md">${esc(p.date || "")}</span></div>
+              ${p.vid
+                ? `<div class="h-full w-full pb-11 pt-[96px]"><video data-i="${k}" src="${esc(p.src)}#t=0.1" controls playsinline preload="metadata" class="h-full w-full object-contain"></video></div>`
+                : `<img src="${esc(p.src)}" loading="lazy" decoding="async" alt="" class="h-full w-full object-contain">`}
+            </div>`).join("")}
+        </div>
+      </div>`
+  }),
+
+  notes: () => ({ t: "Notes", large: 1, h: `<h1 class="big">Notes</h1><p class="mx-4 mb-4 rounded-xl bg-[#1c1c1e] px-3 py-2 text-white/40">Rechercher</p><ul class="grp divide-y divide-white/10">${D.notes.map((n, i) => `<li><button data-go="note:${i}" class="row !items-start flex-col !gap-0.5"><b class="font-semibold">${esc(n.title)}</b><span class="sub">${esc(n.date)} · ${esc(n.text.split("\n")[0])}</span></button></li>`).join("")}</ul>${P}` }),
+  note: i => ({ t: "Note", h: `<div class="p-5"><h1 class="text-[28px] font-bold">${esc(D.notes[i].title)}</h1><p class="sub mb-3">${esc(D.notes[i].date)}</p><p class="whitespace-pre-line text-[17px] leading-relaxed">${esc(D.notes[i].text)}</p></div>` }),
+
+  contacts: () => { const s = [...D.contacts].sort((a, b) => a.name.localeCompare(b.name));
+    return { t: "Contacts", nohdr: 1, h: `<div class="flex items-center justify-between px-5 pb-5 pt-[64px]"><button data-back class="w-8 text-left" aria-label="Retour"><svg width="11" height="18" viewBox="0 0 11 18" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2L2 9l7 7"/></svg></button><b class="text-[19px] font-semibold">Contacts</b><span class="w-8 text-right text-[34px] font-light leading-none">+</span></div><div class="mx-4 mb-1 flex items-center gap-4 border-b border-white/10 pb-4">${pav({ name: D.owner, pic: D.ownerPic }, 68, 26)}<span><b class="block text-[26px] font-bold leading-tight">${esc(D.owner)}</b><span class="text-[17px] text-white/45">Ma fiche</span></span></div><ul>${s.map(c => `<li class="mx-4 border-b border-white/10"><button data-go="contact:${D.contacts.indexOf(c)}" class="flex w-full items-center gap-4 py-2.5 text-left">${pav(c, 50, 22, esc(c.name[0].toUpperCase()))}<span class="flex-1 text-[21px]">${esc(c.name)}</span><span class="text-white/30">${CR}</span></button></li>`).join("")}</ul>${P}` }; },
+  contact: i => { const c = D.contacts[i], ci = D.chats.findIndex(x => x.name === c.name), b = (l, g) => `<button data-go="${g}" class="flex-1 rounded-xl bg-[#1c1c1e] py-2.5 text-[12px]" style="color:var(--ac)">${l}</button>`;
+    return { t: "Contact", h: `<div class="flex flex-col items-center px-4 pt-6"><span class="av h-[100px] w-[100px] text-4xl">${ini(c.name)}</span><h1 class="mt-3 text-[28px] font-bold">${esc(c.name)}</h1><div class="mt-5 flex w-full gap-2">${ci >= 0 ? b("message", "chat:" + ci) : ""}${b("appeler", "tel:" + esc(c.name))}${b("vidéo", "call:" + esc(c.name))}</div><ul class="grp !mx-0 mt-5 w-full divide-y divide-white/10 text-left">${["Envoyer un message", "Partager le contact", "Ajouter aux favoris"].map(l => `<li class="row" style="color:var(--ac)">${l}</li>`).join("")}</ul></div>` }; },
+
+  facetime: () => ({ t: "FaceTime", large: 1, h: `<h1 class="big">FaceTime</h1><div class="mx-4 mb-5 grid grid-cols-2 gap-2 text-center font-medium" style="color:var(--ac)"><span class="rounded-xl bg-[#1c1c1e] py-3">Créer un lien</span><span class="rounded-xl bg-[#1c1c1e] py-3">Nouveau FaceTime</span></div><p class="sub px-4 pb-1.5 font-semibold">Récents</p><ul class="grp divide-y divide-white/10">${D.calls.map(c => `<li><button data-go="call:${esc(c.name)}" class="row"><span class="min-w-0 flex-1"><b class="block text-[17px] font-semibold ${c.miss ? "text-[#ff453a]" : ""}">${esc(c.name)}</b><span class="sub">${esc(c.type)}</span></span><span class="sub">${esc(c.time)}</span></button></li>`).join("")}</ul>${P}` }),
+  call: n => ({ t: "FaceTime", full: 1, h: `<div class="absolute inset-0 flex flex-col items-center bg-gradient-to-b from-[#3a3a44] to-black px-6 pt-32 text-center"><span class="av h-28 w-28 overflow-hidden text-4xl">${/^[\d+*#]/.test(n) ? _img(IC.contacts[1]) : ini(n)}</span><h1 class="mt-5 text-[32px] font-semibold">${esc(n)}</h1><p class="mt-1 text-white/60">FaceTime…</p><button data-back class="mb-20 mt-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#ff3b30] text-2xl" aria-label="Raccrocher">✕</button></div>` }),
+
+  calendar: () => { const y = now.getFullYear(), m = now.getMonth(), off = (new Date(y, m, 1).getDay() + 6) % 7, dn = new Date(y, m + 1, 0).getDate(), has = d => D.events.some(e => e.day === d);
+    let c = "<span></span>".repeat(off);
+    for (let d = 1; d <= dn; d++) { const t = d === now.getDate(); c += `<span class="mx-auto flex h-10 w-10 flex-col items-center justify-center rounded-full text-[20px] ${t ? "bg-[#ff453a] font-semibold" : ""}">${d}${has(d) ? `<i class="-mt-0.5 h-1 w-1 rounded-full ${t ? "bg-white" : "bg-white/50"}"></i>` : ""}</span>`; }
+    return { t: "Calendrier", large: 1, h: `<h1 class="big capitalize" style="color:var(--ac)">${now.toLocaleDateString("fr-FR", { month: "long" })} <span class="text-white/40">${y}</span></h1><div class="grid grid-cols-7 gap-y-1 px-3 pb-4 text-center">${[..."LMMJVSD"].map(x => `<span class="sub font-semibold">${x}</span>`).join("")}${c}</div><ul class="grp divide-y divide-white/10">${D.events.map(e => `<li class="row"><i class="h-9 w-1 rounded-full bg-[#ff453a]"></i><span><b class="block font-semibold">${esc(e.t)}</b><span class="sub">${e.day} ${mon} · ${esc(e.h)}</span></span></li>`).join("")}</ul>${P}` }; },
+
+  camera: () => ({ t: "Appareil photo", full: 1, after: startCam, h: `<div class="absolute inset-0 bg-gradient-to-b from-[#1b1b22] via-[#0d0d10] to-black"><video id="cam" autoplay playsinline muted class="absolute inset-0 h-full w-full -scale-x-100 object-cover"></video><p id="camMsg" class="absolute inset-x-8 top-1/2 text-center text-white/60"></p><i class="pointer-events-none absolute inset-y-0 left-1/3 w-1/3 border-x border-white/15"></i><i class="pointer-events-none absolute inset-x-0 top-[28%] h-[26%] border-y border-white/15"></i><div class="absolute inset-x-0 top-[58px] flex h-9 items-center justify-end gap-3 px-4">${[SI('<path d="M13 2L5 14h6l-1 8 8-12h-6z"/>'), SI('<circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="8" stroke-dasharray="2 3"/>')].map(i => `<span class="flex h-9 w-9 items-center justify-center rounded-full bg-black/35">${i}</span>`).join("")}</div><div class="absolute inset-x-0 bottom-[178px] flex justify-center"><span class="flex items-center gap-2 rounded-full bg-black/40 px-2 py-1.5 text-[12px] font-semibold"><span class="px-1">.5</span><span class="flex h-7 w-7 items-center justify-center rounded-full bg-black/60 text-[#ffd60a]">1×</span><span class="px-1">2</span></span></div><div id="flash" class="pointer-events-none absolute inset-0 bg-white opacity-0 transition-opacity duration-150"></div><div class="absolute inset-x-0 bottom-0 bg-black/60 pb-10 pt-3"><p class="mb-4 flex justify-center gap-5 text-[13px] font-semibold text-white/80"><span>VIDÉO</span><span class="text-[#ffd60a]">PHOTO</span><span>PORTRAIT</span></p><div class="flex items-center justify-around"><span id="thumb" class="h-12 w-12 rounded-lg bg-neutral-800" style="${bg(D.gallery.find(p => !p.vid) || { a: "#2a2a2e", b: "#111" })}"></span><button data-shot class="h-[72px] w-[72px] rounded-full border-4 border-white p-1" aria-label="Prendre une photo"><span class="block h-full w-full rounded-full bg-white"></span></button><span class="flex h-12 w-12 items-center justify-center rounded-full bg-white/15">${SI('<path d="M4 8h13l-3-3M20 16H7l3 3"/>')}</span></div></div></div>` }),
+
+  youtube: () => ({ t: "YouTube", full: 1, h: `<div class="absolute inset-0 overflow-y-auto bg-[#0f0f0f]"><div class="flex items-center justify-between pb-2 pl-14 pr-4 pt-[62px]"><span class="flex items-center gap-1.5 text-[20px] font-bold tracking-tight"><svg width="30" height="21" viewBox="0 0 30 21"><rect width="30" height="21" rx="6" fill="#f00"/><path d="M12 5.5v10l8.5-5z" fill="#fff"/></svg>YouTube</span><span class="av h-8 w-8 text-sm">${ini(D.owner)}</span></div><div class="flex gap-2 overflow-x-auto px-4 pb-3 text-[14px]">${["Tout", "Musique", "En direct", "Chats"].map((c, i) => `<span class="shrink-0 rounded-lg px-3 py-1.5 ${i ? "bg-white/10" : "bg-white text-black"}">${c}</span>`).join("")}</div>${D.videos.map((v, i) => `<button data-go="ytvid:${i}" class="block w-full pb-5 text-left"><span class="relative block aspect-video w-full" style="${v.yt ? bg({ src: `https://i.ytimg.com/vi/${v.yt}/hqdefault.jpg` }) : gr(v)}">${v.dur ? `<b class="absolute bottom-2 right-2 rounded bg-black/80 px-1.5 text-[12px] font-medium">${esc(v.dur)}</b>` : ""}</span><span class="flex gap-3 px-3 pt-3"><span class="av h-9 w-9 text-sm">${ini(v.chan)}</span><span><b class="block text-[15px] font-medium leading-snug">${esc(v.title)}</b><span class="sub">${esc(v.chan)} · ${esc(v.meta)}</span></span></span></button>`).join("")}${P}${P}</div>` }),
+  ytvid: i => { const v = D.videos[i]; ytOn = false;
+    return { t: "YouTube", full: 1, h: `<div class="absolute inset-0 overflow-y-auto bg-[#0f0f0f]"><div class="relative mt-[54px] aspect-video w-full bg-black" style="${gr(v)}">${v.yt ? `<iframe src="https://www.youtube.com/embed/${v.yt}?autoplay=1&playsinline=1&rel=0" class="absolute inset-0 h-full w-full" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>` : v.src ? `<video src="${esc(v.src)}" controls autoplay playsinline class="absolute inset-0 h-full w-full bg-black"></video>` : `<button data-yt class="absolute inset-0 flex items-center justify-center" aria-label="Lecture / pause"><span id="ytIc" class="flex h-14 w-14 items-center justify-center rounded-full bg-black/60">${PLAY}</span></button><i class="absolute inset-x-0 bottom-0 h-1 bg-white/30"><i id="ytBar" class="block h-full w-[3%] bg-[#f00]"></i></i>`}</div><div class="p-3"><h1 class="text-[18px] font-semibold leading-snug">${esc(v.title)}</h1><p class="sub mt-1">${esc(v.meta)}</p><div class="mt-4 flex items-center gap-3"><span class="av h-10 w-10">${ini(v.chan)}</span><b class="flex-1 font-medium">${esc(v.chan)}</b><span class="rounded-full bg-white px-4 py-2 text-[14px] font-medium text-black">S’abonner</span></div></div></div>` }; },
+
+  spotify: () => ({ t: "Spotify", full: 1, h: `<div class="absolute inset-0 overflow-y-auto bg-[#121212]"><div class="bg-gradient-to-b from-[#1b5e3a] to-transparent px-4 pb-4 pt-[104px]"><h1 class="text-[26px] font-bold">Ta bibliothèque</h1><div class="mt-3 flex gap-2 text-[14px]">${["Playlists", "Artistes", "Albums"].map(c => `<span class="rounded-full bg-white/10 px-3 py-1.5">${c}</span>`).join("")}</div></div><ul>${D.tracks.map((t, i) => `<li><button data-track="${i}" class="row"><span class="h-14 w-14 shrink-0" style="${gr(t)}"></span><span class="flex-1"><b class="block text-[16px] font-medium ${cur === i ? "text-[#1ed760]" : ""}">${esc(t.title)}</b><span class="sub">${esc(t.artist)}</span></span></button></li>`).join("")}</ul>${P}${P}${cur < 0 ? "" : `<button data-track="${cur}" class="sticky bottom-[70px] mx-2 flex w-[calc(100%-16px)] items-center gap-3 rounded-lg bg-[#4a2c5e] p-2 text-left"><span class="h-10 w-10 rounded" style="${gr(D.tracks[cur])}"></span><span class="flex-1"><b class="block text-[14px] font-medium">${esc(D.tracks[cur].title)}</b><span class="sub">${esc(D.tracks[cur].artist)}</span></span><span class="pr-2">${play ? PAUSE : PLAY}</span></button>`}<div class="sticky bottom-0 flex justify-around bg-black/90 pb-9 pt-3 text-[11px]"><span class="text-white/50">Accueil</span><span class="text-white/50">Recherche</span><b class="font-medium">Ta bibliothèque</b></div></div>` }),
+
+  phone: () => { numStr = ""; return { t: "Clavier", full: 1, h: `<div class="absolute inset-0 flex flex-col bg-black"><div class="flex flex-1 items-end justify-center pb-5"><p id="num" class="h-11 text-[34px] font-light"></p></div><div class="mx-auto grid w-fit grid-cols-3 gap-x-5 gap-y-3.5">${[["1", ""], ["2", "ABC"], ["3", "DEF"], ["4", "GHI"], ["5", "JKL"], ["6", "MNO"], ["7", "PQRS"], ["8", "TUV"], ["9", "WXYZ"], ["*", ""], ["0", "+"], ["#", ""]].map(([k, l]) => `<button data-key="${k}" class="flex h-[78px] w-[78px] flex-col items-center justify-center rounded-full bg-[#333336] active:bg-[#5a5a5e]"><span class="text-[34px] leading-none">${k}</span><span class="h-3 text-[10px] font-semibold tracking-[2px]">${l}</span></button>`).join("")}</div><div class="mx-auto my-3.5 grid w-fit grid-cols-3 gap-x-5"><span></span><button data-dial class="flex h-[78px] w-[78px] items-center justify-center rounded-full bg-[#30d158]" aria-label="Appeler"><svg width="36" height="36" viewBox="0 0 60 60">${HS}</svg></button><button data-del style="visibility:hidden" class="flex items-center justify-center" aria-label="Effacer"><svg width="30" height="22" viewBox="0 0 30 22" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round"><path d="M10 1h18v20H10L1 11zM15 7l8 8M23 7l-8 8"/></svg></button></div>${tabs(PT, "Clavier", "#0a84ff")}</div>` }; },
+  recents: () => ({ t: "Récents", large: 1, h: withTabs(`<div class="flex items-center justify-between px-4 pt-1 text-[17px] text-[#0a84ff]"><span>Modifier</span><span class="flex rounded-lg bg-[#1c1c1e] p-0.5 text-[13px] font-semibold text-white"><span class="rounded-md bg-[#636366] px-4 py-1">Tous</span><span class="px-4 py-1 text-white/70">Manqués</span></span><span class="w-[58px]"></span></div><h1 class="big">Récents</h1>${EMPTY("Aucun appel récent")}`, PT, "Récents", "#0a84ff") }),
+  favs: () => ({ t: "Favoris", large: 1, h: withTabs(`<div class="flex items-center justify-between px-4 pt-1 text-[17px] text-[#0a84ff]"><span>Modifier</span><span class="text-[32px] font-light leading-none">+</span></div><h1 class="big">Favoris</h1>${EMPTY("Aucun favori")}`, PT, "Favoris", "#0a84ff") }),
+  vm: () => ({ t: "Messagerie", large: 1, h: withTabs(`<div class="flex items-center justify-between px-4 pt-1 text-[17px] text-[#0a84ff]"><span></span><span>Répondeur</span></div><h1 class="big">Messagerie</h1>${EMPTY("Aucun message")}`, PT, "Messagerie", "#0a84ff") }),
+  pcontacts: () => { const v = V.contacts(); v.h = withTabs(v.h, PT, "Contacts", "#0a84ff"); return v; },
+  tel: n => { const v = V.call(n); v.h = v.h.replace("FaceTime…", "appel…"); return v; },
+
+  whatsapp: () => ({ t: "WhatsApp", large: 1, h: withTabs(`<h1 class="big">Discussions</h1><p class="mx-4 mb-2 rounded-xl bg-[#1c1c1e] px-3 py-2 text-white/40">Rechercher</p><div class="flex gap-2 overflow-x-auto px-4 pb-3 text-[14px]">${["Toutes", "Non lues", "Favoris", "Groupes"].map((x, k) => `<span class="shrink-0 rounded-full px-3 py-1 ${k ? "bg-white/10 text-white/70" : "bg-[#103529] text-[#25d366]"}">${x}</span>`).join("")}</div><ul>${D.wa.map((c, i) => [c, i]).sort((x, y) => (y[0].top | 0) - (x[0].top | 0)).map(([c, i]) => `<li><button data-go="wchat:${i}" class="row items-start">${pav(c, 52, 18)}<span class="min-w-0 flex-1 border-b border-white/10 pb-2.5"><span class="flex justify-between"><b class="font-semibold">${esc(c.name)}</b><span class="text-[13px] ${c.unread ? "text-[#25d366]" : "text-white/50"}">${esc(c.time)}</span></span><span class="flex items-center justify-between gap-2"><span class="line-clamp-1 text-[15px] text-white/50">${esc(wprev(c))}</span>${c.unread ? `<i class="flex h-5 min-w-5 items-center justify-center rounded-full bg-[#25d366] px-1 text-[12px] font-semibold not-italic text-black">${c.unread}</i>` : ""}</span></span></button></li>`).join("")}</ul>`, WT, "Discussions", "#25d366") }),
+  wchat: i => { const c = D.wa[i]; c.unread = 0; return { t: c.name, full: 1, nofb: 1, h: `<div class="absolute inset-0 flex flex-col bg-[#0b0b0b]"><div class="glass flex shrink-0 items-center gap-2.5 bg-black/70 px-3 pb-2 pt-[56px] !rounded-none !border-none"><button data-back class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/10 bg-[#1c1c1e]" aria-label="Retour">${CH}</button>${pav(c, 38, 14)}<span class="min-w-0 flex-1"><b class="block truncate text-[16px] font-semibold leading-tight">${esc(c.name)}</b><span class="block truncate text-[12px] text-white/55">${esc(c.sub ?? "en ligne")}</span></span><span class="flex h-11 shrink-0 items-center gap-4 rounded-full border border-white/10 bg-[#1c1c1e] px-4">${SI('<rect x="2" y="6" width="13" height="12" rx="3"/><path d="M16.5 10.5L22 7.5v9l-5.5-3z"/>')}${SI('<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/>')}</span></div><div class="wapp flex-1 overflow-y-auto px-3 pb-3 pt-4"><p class="mx-auto mb-3 w-fit rounded-full bg-[#1c1c1e] px-3 py-0.5 text-[13px] font-semibold">Aujourd’hui</p><p class="mx-auto mb-4 max-w-[88%] rounded-xl bg-[#1d1d1b] px-3 py-2 text-center text-[12.5px] leading-snug text-[#f3c969]">🔒 Les messages et les appels sont chiffrés de bout en bout. Seules les personnes prenant part à cette discussion peuvent les lire, les écouter ou les partager. <b>En savoir plus</b></p><div class="space-y-1.5">${c.msgs.map((m, j) => wm(m, i, j)).join("")}</div></div><div class="flex shrink-0 items-center gap-3 bg-black/70 px-3 pb-8 pt-2"><span class="text-[34px] font-light leading-none">+</span><div class="flex flex-1 items-center justify-between rounded-full bg-[#1c1c1e] px-4 py-2.5 text-white/50"><span></span>${SI('<path d="M5 4h10l4 4v8a4 4 0 0 1-4 4H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/><path d="M14 4v4h5"/>')}</div>${SI('<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>')}<span class="flex h-11 w-11 items-center justify-center rounded-full bg-white text-black">${SI('<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>')}</span></div></div>` }; },
+  wmedia: i => { const c = D.wa[i], im = c.msgs.map((m, j) => [m, j]).filter(([m]) => m.img), vo = c.msgs.filter(m => m.vo);
+    return { t: "Médias", h: `<div class="min-h-full bg-[#0b141a] pb-10"><div class="mx-4 my-3 flex rounded-lg bg-[#202c33] p-0.5 text-center text-[14px] font-medium"><span class="flex-1 rounded-md bg-[#25d366] py-1 text-black">Médias</span><span class="flex-1 py-1 text-white/60">Docs</span><span class="flex-1 py-1 text-white/60">Liens</span></div><p class="sub px-4 pb-1.5 font-semibold">Photos</p><div class="grid grid-cols-3 gap-0.5">${im.map(([m, j]) => `<button data-go="wimg:${i}_${j}" class="relative aspect-square" style="${bg(m.img)}" aria-label="Photo">${m.dl ? '<span class="absolute inset-0 flex items-center justify-center bg-black/40 text-[22px]">↓</span>' : ""}</button>`).join("")}</div><p class="sub px-4 pb-1.5 pt-5 font-semibold">Messages vocaux</p><ul class="mx-4 divide-y divide-white/10 overflow-hidden rounded-xl bg-[#202c33]">${vo.length ? vo.map(m => `<li class="flex items-center gap-3 px-3 py-2.5"><span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#25d366] text-black">${PLAY}</span><span class="flex h-7 flex-1 items-center gap-[2px]">${WV}</span><span class="sub">${m.vo}</span></li>`).join("") : '<li class="px-3 py-4 text-center text-white/40">Aucun message vocal</li>'}</ul></div>` }; },
+  wimg: a => { const [i, j] = a.split("_"), m = D.wa[i].msgs[j]; return { t: "Photo", full: 1, h: `<div class="absolute inset-0 flex items-center bg-black"><div class="aspect-[3/4] w-full" style="${bg(m.img)}"></div></div>` }; },
+  weather: () => { const W = D.weather, lo = Math.min(...W.days.map(d => d[1])), hi = Math.max(...W.days.map(d => d[2])), h0 = now.getHours();
+    const card = (t, b) => `<div class="glass mx-4 mb-3 rounded-[22px] bg-white/15 p-3.5 text-left"><p class="mb-2 border-b border-white/20 pb-2 text-[13px] font-medium text-white/60">${t}</p><b class="block">${b}</div>`;
+    return { t: "Météo", full: 1, h: `<div class="absolute inset-0 overflow-y-auto bg-gradient-to-b from-[#2c5a94] via-[#4a86c5] to-[#1f4272] pb-12 text-center"><div class="pt-[70px]"><h1 class="text-[34px]">${esc(W.city)}</h1><p class="text-[96px] font-extralight leading-none">${W.temp}°</p><p class="text-[20px] text-white/85">${esc(W.cond)}</p><p class="mb-5 text-[20px] text-white/85">Max. ${W.hi}° Min. ${W.lo}°</p></div>${card("Prévisions horaires", `<div class="flex gap-5 overflow-x-auto">${W.hours.map(([ic, t], i) => `<span class="flex shrink-0 flex-col items-center gap-1.5 text-[15px] font-medium"><span>${i ? (h0 + i) % 24 + "h" : "Mainten."}</span><span class="text-[22px]">${ic}</span><span>${t}°</span></span>`).join("")}</div>`)}${card("Prévisions sur 5 jours", W.days.map(([ic, l, h], i) => `<div class="flex items-center gap-3 py-1.5 ${i ? "border-t border-white/10" : ""}"><span class="w-20 text-[17px] font-medium capitalize">${i ? new Date(now.getTime() + i * 864e5).toLocaleDateString("fr-FR", { weekday: "long" }) : "Auj."}</span><span class="w-7 text-[20px]">${ic}</span><span class="w-8 text-right text-white/60">${l}°</span><span class="relative h-1 flex-1 rounded-full bg-black/25"><i class="absolute inset-y-0 rounded-full bg-gradient-to-r from-[#7dd3fc] to-[#fde047]" style="left:${(l - lo) / (hi - lo) * 100}%;width:${(h - l) / (hi - lo) * 100}%"></i></span><span class="w-8 text-right">${h}°</span></div>`).join(""))}</div>` }; }
+};
+
+/* Téléphone (clavier, récents, contacts) et WhatsApp : barres d'onglets */
+let numStr = "";
+const SI = d => `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+const PT = [
+  ["Favoris", "favs", SI('<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>')],
+  ["Récents", "recents", SI('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>')],
+  ["Contacts", "pcontacts", SI('<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.5 3.5-7 8-7s8 2.5 8 7"/>')],
+  ["Clavier", "phone", SI('<path stroke-width="3.2" d="M6 6h.01M12 6h.01M18 6h.01M6 12h.01M12 12h.01M18 12h.01M6 18h.01M12 18h.01M18 18h.01"/>')],
+  ["Messagerie", "vm", SI('<circle cx="7" cy="12" r="4"/><circle cx="17" cy="12" r="4"/><path d="M7 16h10"/>')]
+];
+const EMPTY = t => `<p class="py-28 text-center text-[20px] text-white/40">${t}</p>`;
+const WT = [["Statuts", "", SI('<circle cx="12" cy="12" r="9" stroke-dasharray="3 3"/>')], ["Appels", "", SI('<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/>')], ["Communautés", "", SI('<circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-3.5 2.7-6 6-6s6 2.5 6 6M15 14.5c3 0 6 2 6 5.5"/>')], ["Discussions", "", SI('<path d="M4 5h16v11H9l-5 4z"/>')], ["Réglages", "", SI('<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/>')]];
+const WV = Array.from({ length: 26 }, (_, k) => `<i class="w-[2.5px] shrink-0 rounded-full" style="height:${5 + (k * 7 % 5) * 4}px;background:rgba(255,255,255,${k < 9 ? .9 : .4})"></i>`).join("");
+const wprev = c => { const m = c.msgs.at(-1); return (m.from ? m.from + " : " : "") + (m.t ?? m.sys ?? ""); };
+const wc = n => ["#06cf9c", "#53bdeb", "#ffa726", "#e57373", "#ba68c8"][[...n].reduce((a, ch) => a + ch.charCodeAt(0), 0) % 5];
+const wm = (m, i, j) => { if (m.sys) return `<div class="flex justify-center py-1"><span class="rounded-lg bg-[#182229] px-3 py-1 text-center text-[12.5px] text-[#8696a0]">${esc(m.sys)}</span></div>`; const me = m.me, tm = `<span class="text-[11px] text-white/50">${esc(m.h || "")}${me ? (m.one ? " ✓" : ' <span class="text-[#53bdeb]">✓✓</span>') : ""}</span>`;
+  const inner = m.vo ? `<span class="flex w-[225px] items-center gap-2.5 py-0.5"><span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15">${PLAY}</span><span class="flex h-7 flex-1 items-center gap-[2px]">${WV}</span></span><span class="flex justify-between text-[11px] text-white/60"><span>${m.vo}</span>${tm}</span>`
+    : m.img ? `<button data-go="wimg:${i}_${j}" class="relative block w-[216px] overflow-hidden rounded-md" aria-label="Voir la photo"><span class="block aspect-[3/4] w-full" style="${bg(m.img)}"></span>${m.dl ? `<span class="absolute inset-0 flex items-center justify-center bg-black/35 text-[13px] font-medium"><span class="rounded-full bg-black/55 px-3 py-1.5">↓ ${m.dl}</span></span>` : ""}<span class="absolute bottom-1 right-1.5 rounded bg-black/40 px-1">${tm}</span></button>`
+    : m.file ? `<span class="flex items-center gap-3 rounded-2xl bg-black/25 px-2.5 py-2.5"><svg class="shrink-0" width="28" height="33" viewBox="0 0 34 40"><path d="M3 0h19l11 11v26a3 3 0 0 1-3 3H3a3 3 0 0 1-3-3V3a3 3 0 0 1 3-3z" fill="#8e9195"/><path d="M22 0l11 11h-8a3 3 0 0 1-3-3z" fill="#b8bbbe"/><text x="17" y="31" font-size="9" font-weight="700" text-anchor="middle" fill="#fff">MP3</text></svg><span class="min-w-0"><span class="block text-[15px] leading-tight">${esc(m.file.n)}</span><span class="text-[12px] text-white/50">${esc(m.file.s)}</span></span></span><span class="flex items-end justify-between gap-3 px-1.5 pt-2"><span class="text-[15px]">${esc(m.t)}</span>${tm}</span>`
+    : `${m.from ? `<b class="block text-[13px] font-semibold" style="color:${wc(m.from)}">${esc(m.from)}</b>` : ""}${esc(m.t)} <span class="float-right ml-2 mt-2">${tm}</span>`;
+  const fw = m.fwd ? '<span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/25"><svg width="17" height="17" viewBox="0 0 24 24" fill="#fff"><path d="M13 5l8 7-8 7v-4.5c-5 0-8 1.2-10 5 .6-6.500 4.500-10 10-10z"/></svg></span>' : "";
+  return `<div class="flex ${me ? "items-center justify-end gap-3" : ""}">${fw}<div class="max-w-[80%] rounded-[20px] px-3 py-1.5 text-[15px] leading-snug ${m.img ? "!p-1 " : m.file ? "!p-1.5 " : ""}${me ? "bg-[#144d37]" : "bg-[#1f1f1f]"}">${inner}</div></div>`; };
+const tabs = (items, act, c) => `<div class="glass sticky bottom-0 flex justify-around border-t border-white/10 bg-black/85 pb-9 pt-2 text-[10px]">${items.map(([l, k, i]) => `<button ${k ? `data-tab="${k}"` : ""} class="flex w-16 flex-col items-center gap-0.5" style="color:${l === act ? c : "#8e8e93"}">${i}${l}</button>`).join("")}</div>`;
+const withTabs = (h, items, act, c) => `<div class="flex min-h-full flex-col"><div class="flex-1">${h}</div>${tabs(items, act, c)}</div>`;
+function key(k) {
+  numStr = k === null ? numStr.slice(0, -1) : (numStr + k).slice(0, 16);
+  $("#num").textContent = numStr; $("[data-del]").style.visibility = numStr ? "visible" : "hidden";
+}
+
+/* Appareil photo (vraie caméra si autorisée), YouTube */
+let cam = null, ytOn = false;
+const stopCam = () => { cam?.getTracks().forEach(t => t.stop()); cam = null; };
+async function startCam() {
+  try {
+    const m = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
+    if (!$("#cam")) return m.getTracks().forEach(t => t.stop());
+    cam = m; $("#cam").srcObject = m;
+  } catch { const e = $("#camMsg"); if (e) e.textContent = "Autorise l’accès à la caméra pour prendre des photos."; }
+}
+function shot() {
+  const f = $("#flash"), v = $("#cam"); f.style.opacity = 1; setTimeout(() => f.style.opacity = 0, 120);
+  if (!v.videoWidth) return;
+  const c = document.createElement("canvas"); c.width = v.videoWidth; c.height = v.videoHeight;
+  c.getContext("2d").drawImage(v, 0, 0);
+  D.gallery.unshift({ src: c.toDataURL("image/jpeg", .85), date: "Aujourd’hui à " + hm(new Date()) }); $("#thumb").style.cssText = bg(D.gallery[0]);
+}
+function ytTog() {
+  const b = $("#ytBar"); ytOn = !ytOn; $("#ytIc").innerHTML = ytOn ? PAUSE : PLAY;
+  const w = getComputedStyle(b).width; b.style.transition = "none"; b.style.width = w;
+  if (ytOn) { b.offsetWidth; b.style.transition = "width 120s linear"; b.style.width = "100%"; }
+}
+
+/* Navigation (pile de vues) */
+let st = [];
+function show() {
+  const s = st.at(-1), [k, a] = s.k.split(":"), v = V[k](a), pv = st.at(-2);
+  s.t = v.t; $("#hTitle").textContent = v.large ? "" : v.t; $("#hdr").hidden = !!(v.full || v.nohdr);
+  $("#back").innerHTML = CH + (pv ? esc(pv.t) : "Accueil"); $("#fback").style.display = v.full && !v.nofb ? "flex" : "none"; $("#body").innerHTML = v.h; $("#body").scrollTop = 0;
+  if (k !== "camera") stopCam(); v.after?.(); emit("view", k);
+}
+function openApp(id, el) {
+  const p = $("#phone").getBoundingClientRect(), r = el.getBoundingClientRect(), a = $("#app");
+  a.style.transformOrigin = `${r.left + r.width / 2 - p.left}px ${r.top + r.height / 2 - p.top}px`;
+  a.style.setProperty("--ac", APPS[id][1]); st = [{ k: id, t: "" }]; show(); a.classList.add("open"); emit("open", id);
+}
+const closeApp = () => { $("#app").classList.remove("open"); st = []; stopCam(); emit("close"); };
+const goBack = () => { st.pop(); st.length ? show() : closeApp(); };
+function tog(i) {
+  if (i !== cur) { au?.pause(); cur = i; play = true; au = D.tracks[i].src ? new Audio(D.tracks[i].src) : null; } else play = !play;
+  if (au) play ? au.play().catch(() => {}) : au.pause();
+  show();
+}
+document.addEventListener("click", e => {
+  const o = e.target.closest("[data-open]"), g = e.target.closest("[data-go]"), t = e.target.closest("[data-track]");
+  if (o) { if (o.dataset.open === "safari") location.href = D.safariUrl; else openApp(o.dataset.open, o); } else if (g) { st.push({ k: g.dataset.go, t: "" }); show(); }
+  else if (t) tog(+t.dataset.track); else if (e.target.closest("[data-shot]")) shot(); else if (e.target.closest("[data-yt]")) ytTog();
+  else if (e.target.closest("[data-back],#back,#fback")) goBack();
+});
+
+/* Écran verrouillé : balayage vers le haut (ou simple tap) */
+const lock = $("#lock"); let y0 = null, locked = true;
+const unlock = () => { lock.classList.remove("drag"); lock.style.transform = "translateY(-105%)"; locked = false; emit("unlock"); };
+lock.addEventListener("pointerdown", e => { if (e.target.closest("button")) return; y0 = e.clientY; lock.classList.add("drag"); lock.setPointerCapture(e.pointerId); });
+lock.addEventListener("pointermove", e => { if (y0 !== null) lock.style.transform = `translateY(${Math.min(0, e.clientY - y0)}px)`; });
+lock.addEventListener("pointerup", e => { if (y0 === null) return; const d = e.clientY - y0; y0 = null; lock.classList.remove("drag"); d < -120 || Math.abs(d) < 6 ? unlock() : (lock.style.transform = ""); });
+lock.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") unlock(); });
+$("#torch").addEventListener("click", e => ["bg-black/40", "bg-white", "text-white", "text-black"].forEach(c => e.currentTarget.classList.toggle(c)));
+$("#bar").addEventListener("click", () => { if (locked) unlock(); else closeApp(); });
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-key],[data-del],[data-dial],[data-tab]"); if (!b) return;
+  if (b.dataset.key !== undefined) key(b.dataset.key);
+  else if (b.hasAttribute("data-del")) key(null);
+  else if (b.hasAttribute("data-dial")) { if (numStr) { st.push({ k: "tel:" + numStr, t: "" }); show(); } }
+  else { st = [{ k: b.dataset.tab, t: "" }]; show(); }
+});
+
+/* ===================== GALERIE =====================
+   Scanne le dossier gallery/ : 1.jpg, 2.mp4, 3.png … (numéros croissants, trous tolérés).
+   Tu ajoutes un fichier avec le numéro suivant → il apparaît tout seul, rien à modifier ici.
+   Ordre d’affichage = numéro du fichier.
+   gap = nombre de numéros vides d’affilée avant d’arrêter le scan. */
+const GAL = { dir: "gallery", img: ["jpg", "jpeg", "png", "webp"], vid: ["mp4", "mov", "webm"], gap: 15, max: 500, batch: 8 };
+const probe = (url, vid) => new Promise(done => {
+  setTimeout(() => done(false), 6000);
+  if (location.protocol !== "file:")
+    return fetch(url, { method: "HEAD" }).then(r => done(r.ok && /^(image|video)\//.test(r.headers.get("content-type") || ""))).catch(() => done(false));
+  const e = vid ? document.createElement("video") : new Image(); /* en local (file://) fetch est bloqué : on teste en chargeant le fichier */
+  e.onload = e.onloadedmetadata = () => done(true); e.onerror = () => done(false);
+  if (vid) e.preload = "metadata"; e.src = url;
+});
+const GAL_TYPES = [...GAL.img.map(x => [x, 0]), ...GAL.vid.map(x => [x, 1])];
+const findNum = async n => (await Promise.all(GAL_TYPES.map(async ([x, vid]) => { const src = `${GAL.dir}/${n}.${x}`; return (await probe(src, vid)) ? { src, vid } : null; }))).filter(Boolean);
+async function loadGallery() {
+  const out = []; let miss = 0;
+  for (let n = 1; n <= GAL.max && miss < GAL.gap; n += GAL.batch)
+    for (const r of await Promise.all(Array.from({ length: GAL.batch }, (_, k) => findNum(n + k)))) r.length ? (out.push(...r), miss = 0) : miss++;
+  return out;
+}
+loadGallery().then(items => {
+  D.gallery.push(...items.map((p, i) => ({ ...p, date: stamp(i) })));
+  galReady = true; if (st.at(-1)?.k === "photos") show();
+});
+</script>
+<script>
+(() => {
+  const ph = $("#phone"), C = D.caller, sleep = ms => new Promise(r => setTimeout(r, ms)), setS = v => ph.dataset.s = v;
+
+  /* TikTok : « Attente… » puis le rond se remplit de plus en plus lentement, sans jamais atteindre 100 % */
+  const TKC = 2 * Math.PI * 5.5; let tkP = 0, tkLoad = false, tkPause = false, tkOn = false;
+  const tkDraw = () => { const pie = $("#tkPie"); if (!pie) return;
+    $("#tkSp").style.opacity = !tkLoad && !tkPause ? 1 : 0; pie.style.opacity = tkLoad && !tkPause ? 1 : 0; $("#tkPz").style.opacity = tkPause ? 1 : 0;
+    pie.setAttribute("stroke-dasharray", `${(TKC * tkP).toFixed(2)} ${TKC.toFixed(2)}`); };
+  const tkStart = () => { if (tkOn) return; tkOn = true; tkDraw(); setTimeout(() => { tkLoad = true; tkDraw(); }, 3000);
+    setInterval(() => { if (!tkLoad || tkPause) return; tkP += (.97 - tkP) * (.003 + Math.random() * .004); tkDraw(); }, 300); };
+  $("#tk").addEventListener("click", () => { tkPause = !tkPause; tkDraw(); navigator.vibrate?.(10); });
+
+  let ac;
+  const tone = (f, d0, d, v = .18) => { ac ??= new (window.AudioContext || window.webkitAudioContext)(); if (ac.state === "suspended") ac.resume();
+    const o = ac.createOscillator(), g = ac.createGain(), t = ac.currentTime + d0; o.frequency.value = f; o.connect(g); g.connect(ac.destination);
+    g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(v, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + d); o.start(t); o.stop(t + d + .05); };
+  const ringOnce = () => { [1047, 1319, 1175, 1568, 1047, 1319, 1175, 1568].forEach((f, i) => tone(f, i * .16 + (i > 3 ? .3 : 0), .3)); navigator.vibrate?.([300, 150, 300]); };
+
+  const el = $("#call"), cBody = $("#cBody"), I = d => SI(d);
+  const avatar = z => `<span class="relative block overflow-hidden rounded-full bg-gradient-to-b from-[#a5a5ad] to-[#6f6f77]" style="width:${z}px;height:${z}px"><svg viewBox="0 0 112 112" class="absolute inset-0 h-full w-full" fill="#fff" fill-opacity=".9"><circle cx="56" cy="42" r="19"/><ellipse cx="56" cy="106" rx="38" ry="32"/></svg></span>`;
+  const btn = (c, bgc, label, icon) => `<button data-c="${c}" class="flex flex-col items-center gap-2 text-[13px]"><span class="flex h-[72px] w-[72px] items-center justify-center rounded-full ${bgc}">${icon}</span>${label}</button>`;
+  const hang = `<svg width="34" height="34" viewBox="0 0 60 60" style="transform:rotate(135deg)">${HS}</svg>`;
+  const cbtn = (c, label, icon, bg = "") => `<button data-c="${c}" class="flex flex-col items-center gap-2 text-[14px]">${bg ? `<span class="flex h-[76px] w-[76px] items-center justify-center rounded-full ${bg}">${icon}</span>` : icon}${label}</button>`;
+  const F = (w, d) => `<svg width="${w}" height="${w}" viewBox="0 0 24 24" fill="#fff">${d}</svg>`;
+  const iClock = `<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9.5"/><path d="M12 6.5V12l3.5 2"/></svg>`;
+  const iMsg = F(26, '<path d="M12 3C6.5 3 2 6.6 2 11c0 2.3 1.2 4.4 3.2 5.8-.2 1.3-.9 2.6-1.9 3.6 0 0 3.1-.2 5.1-1.8.9.3 1.7.4 2.6.4 5.5 0 10-3.6 10-8S17.5 3 12 3z"/>');
+  const iSpk = F(34, '<path d="M3 9v6h4l5 4V5L7 9z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/>');
+  const iFt = F(34, '<rect x="2" y="6" width="13" height="12" rx="3"/><path d="M16.5 10.5 22 7.5v9l-5.5-3z"/>');
+  const iMic = F(34, '<rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/>');
+  /* Appel entrant : numéro, « peut-être : … », Me rappeler / Message, Accepter (pas de Refuser) */
+  const ringView = () => `<h1 class="whitespace-nowrap text-[32px] font-medium leading-tight">${esc(C.number)}</h1><p class="text-[18px] text-white/80">peut-être : ${esc(C.maybe)}</p>
+    <div class="mt-auto flex w-full justify-between px-4">${cbtn("rem", "Me rappeler", iClock)}${cbtn("msg", "Message", iMsg)}</div>
+    <div class="mb-[48px] mt-8">${cbtn("acc", "Accepter", `<svg width="36" height="36" viewBox="0 0 60 60">${HS}</svg>`, "bg-[#65c466]")}</div>`;
+  /* Appel décroché : numéro, chrono, haut-parleur / FaceTime / silence — aucun bouton pour raccrocher */
+  const talkView = () => `<h1 class="whitespace-nowrap text-[32px] font-medium leading-tight">${esc(C.number)}</h1><p id="cT" class="text-[18px] text-white/80">00:00</p>
+    <div class="mb-[48px] mt-auto grid w-full grid-cols-3 px-[6px]">${cbtn("spk", "haut-parleur", iSpk, "bg-white/15")}${cbtn("ft", "FaceTime", iFt, "bg-white/15")}${cbtn("mute", "silence", iMic, "bg-white/15")}</div>`;
+
+  let st8 = "idle", aud, ti, rg, t0, done = false, mTxt = "";
+  const upd = () => { const t = $("#cT"); if (!t) return; const sec = Math.floor((Date.now() - t0) / 1000); t.textContent = `${String(sec / 60 | 0).padStart(2, "0")}:${String(sec % 60).padStart(2, "0")}`; };
+  function addGroup() {
+    const g = D.waGroup; if (!g || D.wa.includes(g)) return;
+    g.msgs = g.msgs.map(m => ({ h: hm(new Date()), ...m })); D.wa.push(g);
+    if (st.at(-1)?.k === "whatsapp") show();
+  }
+  function ring() {
+    if (st8 !== "idle" || done) return; done = true; st8 = "ring";
+    if (au) { au.pause(); play = false; } document.querySelectorAll("#body iframe").forEach(f => f.src = "about:blank"); document.querySelectorAll("#body video:not(#cam)").forEach(v => v.pause());
+    ph.dataset.call = 1; $("#cBg").style.backgroundImage = `url('${D.wallpaper}')`; cBody.innerHTML = ringView(); el.classList.remove("off");
+    ringOnce(); rg = setInterval(ringOnce, 3000); /* sonne sans fin jusqu’à ce qu’on décroche */
+  }
+  function accept() {
+    if (st8 !== "ring") return; clearInterval(rg); st8 = "talk"; addGroup(); cBody.innerHTML = talkView(); cBody.querySelectorAll("button").forEach(b => b.disabled = true); el.style.pointerEvents = "none"; freeze(true); t0 = Date.now(); ti = setInterval(upd, 500); upd(); tone(880, 0, .08);
+    const srcs = [].concat(D.callAudio);
+    aud = new Audio(); aud.volume = 1;
+    const fb = () => setTimeout(() => st8 === "talk" && end(), 9000);
+    const go = i => {
+      if (i >= srcs.length) return fb();
+      let handled = false; const bad = () => { if (handled) return; handled = true; go(i + 1); };
+      aud.onerror = bad; aud.src = srcs[i]; aud.play().catch(bad);
+    };
+    aud.onended = () => end(); go(0);
+  }
+  function end() {
+    if (st8 === "idle") return; clearInterval(rg); clearInterval(ti); if (aud) { aud.onended = aud.onerror = null; aud.pause(); aud = null; }
+    const talked = st8 === "talk"; st8 = "idle"; tone(480, 0, .15);
+    if (talked && $("#cT")) $("#cT").textContent = "Appel terminé";
+    freeze(false); setTimeout(() => { el.classList.add("off"); el.style.pointerEvents = ""; delete ph.dataset.call; }, talked ? 900 : 0);
+    const wait = talked ? 3500 : 3000; setTimeout(() => notify(D.msg[talked ? "done" : "missed"]), wait); setTimeout(lowBattery, wait + 12000);
+  }
+  el.addEventListener("click", e => {
+    const b = e.target.closest("[data-c]"); if (!b) return; const c = b.dataset.c;
+    if (c === "acc") accept();
+  });
+
+  const freeze = on => ["#home", "#app", "#lock", "#bar", "#banner"].forEach(q => $(q).inert = on);
+  const setBat = (p, lp) => { D.battery = p; $("#bat").innerHTML = batt(p, lp); }, bt = $("#batt");
+  function lowBattery() {
+    if (st8 !== "idle") return void setTimeout(lowBattery, 3000);
+    const p = D.lowBattery; setBat(p); $("#bS").textContent = `Il reste ${p} % de batterie.`; bt.classList.remove("off"); [440, 330].forEach((f, i) => tone(f, i * .2, .3)); navigator.vibrate?.([200, 100, 200]);
+  }
+  bt.addEventListener("click", e => { const b = e.target.closest("[data-b]"); if (!b) return; if (b.dataset.b === "lp") setBat(D.battery, true); bt.classList.add("off"); });
+
+  const bn = $("#banner"); let nt, delivered = false, y0, moved;
+  const deliver = () => { if (delivered) return; delivered = true; D.chats.unshift({ name: C.name, pic: C.pic, unread: 1, time: hm(new Date()), msgs: [{ t: mTxt }] }); };
+  function notify(text) {
+    mTxt = text; moved = false;
+    bn.innerHTML = `${ic("messages", .63)}<span class="min-w-0 flex-1"><span class="flex justify-between"><b class="text-[15px] font-semibold">${esc(C.name)}</b><span class="text-[13px] text-white/60">maintenant</span></span><span class="block text-[15px] leading-snug">${esc(text)}</span></span>`;
+    bn.classList.add("show"); [987, 1318].forEach((f, i) => tone(f, i * .14, .35)); navigator.vibrate?.(80); clearTimeout(nt); nt = setTimeout(dismiss, 6500);
+  }
+  function dismiss() { clearTimeout(nt); bn.classList.remove("show"); deliver(); } 
+  bn.addEventListener("pointerdown", e => { y0 = e.clientY; moved = false; });
+  bn.addEventListener("pointerup", e => { if (y0 - e.clientY > 14) { moved = true; dismiss(); } });
+  bn.addEventListener("click", () => {
+    if (moved) return; clearTimeout(nt); bn.classList.remove("show"); deliver(); if (locked) unlock();
+    openApp("messages", document.querySelector('#dock [data-open="messages"]')); st.push({ k: "chat:0", t: "" }); show();
+  });
+
+  let started = false;
+  document.addEventListener("ph", ({ detail: { n, d } }) => {
+    if (n === "unlock") {
+      setS("home"); [...$("#grid").children, ...$("#dock").children].forEach((e, i) => e.style.setProperty("--i", i));
+      ph.classList.add("enter"); setTimeout(() => ph.classList.remove("enter"), 1400);
+      tkStart();
+      if (!started) { started = true; setTimeout(ring, 30000); setTimeout(() => setBat(D.battery - 1), 12000); setTimeout(() => setBat(D.battery - 1), 24000); }
+    } else if (n === "open") setS("app");
+    else if (n === "close") setS(locked ? "lock" : "home");
+  });
+
+  D.videos.forEach(v => fetch("https://www.youtube.com/oembed?format=json&url=" + encodeURIComponent("https://www.youtube.com/watch?v=" + v.yt)).then(r => r.json()).then(j => { v.title = j.title; v.chan = j.author_name; }).catch(() => {}));
+})();
+</script>
+</body>
+</html>

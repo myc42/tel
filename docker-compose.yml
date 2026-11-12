@@ -1,0 +1,10 @@
+services:
+  maabio:
+    build: .
+    container_name: maabio
+    restart: unless-stopped
+    ports:
+      - "${PORT:-3000}:80"
+    # Pour ajouter photos/vidéos SANS rebuild, décommente (le dossier doit exister sur le serveur) :
+    # volumes:
+    #   - ./public/gallery:/usr/share/nginx/html/gallery:ro
